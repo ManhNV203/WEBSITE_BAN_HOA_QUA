@@ -13,8 +13,8 @@ public class beanViewModel {
     }
 
     @Bean("nv_vm")
-    public nhanVienVM getNhanVienVm(){
-        nhanVienVM nvVM = new nhanVienVM();
+    public nhanVienDto getNhanVienVm(){
+        nhanVienDto nvVM = new nhanVienDto();
         return nvVM;
     }
 
@@ -73,4 +73,5 @@ public class beanViewModel {
         gioHangChiTietVM ghctVM = new gioHangChiTietVM();
         return ghctVM;
     }
+
 }

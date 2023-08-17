@@ -16,10 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-@Controller
+@RestController
+@CrossOrigin("*")
 @RequestMapping("cua-hang")
 public class cuaHangController {
     @Autowired
@@ -30,11 +32,15 @@ public class cuaHangController {
     private cuaHangViewModel vm;
 
     @GetMapping("index")
-    public String index(Model model, @RequestParam(name = "page", defaultValue = "0") Integer pageNo) {
-        Pageable pageable = PageRequest.of(pageNo, 4);
-        Page<cuaHang> cuaHangPage = chRepo.findAll(pageable);
-        model.addAttribute("dsCh", cuaHangPage);
-        return "/cuaHang/index";
+    public ResponseEntity<List<cuaHangViewModel>> getAll(){
+        List<cuaHangViewModel> listch = new ArrayList<>();
+        for (cuaHang ch: this.chRepo.findAll()) {
+            cuaHangViewModel chVM = new cuaHangViewModel();
+            chVM.loadDomainModel(ch);
+            listch.add(chVM);
+        }
+        System.out.println(listch);
+        return new ResponseEntity<>(listch,HttpStatus.OK);
     }
 
     @GetMapping("create")

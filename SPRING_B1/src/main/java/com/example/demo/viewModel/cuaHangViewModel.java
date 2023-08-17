@@ -7,13 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class cuaHangViewModel {
-
+    private UUID id;
     @NotBlank(message = "Mã không để trống")
     private String ma;
 
@@ -29,6 +31,7 @@ public class cuaHangViewModel {
     @NotBlank(message = "Thành Phố không để trống")
     private String thanhPho;
     public void loadDomainModel(cuaHang ch){
+        this.setId(ch.getId());
         this.setMa( ch.getMa() );
         this.setTen( ch.getTen() );
         this.setDiaChi( ch.getDia_chi());

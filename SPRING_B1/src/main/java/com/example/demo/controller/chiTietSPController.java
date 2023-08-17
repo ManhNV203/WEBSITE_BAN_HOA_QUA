@@ -9,10 +9,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("chi-tiet-sp")
@@ -38,14 +43,24 @@ public class chiTietSPController {
     private chiTietSPVM ctspVM;
 
     @GetMapping("index")
-    public String index(
-            Model model,
-            @RequestParam(name = "page", defaultValue = "0")Integer pageNo
-    ){
-        Pageable pageable = PageRequest.of(pageNo,4);
-        Page<chiTietSP> pageCtsp = this.ctspRepo.findAll(pageable);
-        model.addAttribute("listCTSP", pageCtsp);
-        return "chiTietSP/index";
+//    public String index(
+//            Model model,
+//            @RequestParam(name = "page", defaultValue = "0")Integer pageNo
+//    ){
+//        Pageable pageable = PageRequest.of(pageNo,4);
+//        Page<chiTietSP> pageCtsp = this.ctspRepo.findAll(pageable);
+//        model.addAttribute("listCTSP", pageCtsp);
+//        return "chiTietSP/index";
+//    }
+    public ResponseEntity<List<chiTietSPVM>> getAll(){
+        List<chiTietSPVM> listch = new ArrayList<>();
+        for (chiTietSP ch: this.ctspRepo.findAll()) {
+            chiTietSPVM chVM = new chiTietSPVM();
+            chVM.loadDomain(ch);
+            listch.add(chVM);
+        }
+        System.out.println(listch);
+        return new ResponseEntity<>(listch, HttpStatus.OK);
     }
     @GetMapping("create")
     public String create(

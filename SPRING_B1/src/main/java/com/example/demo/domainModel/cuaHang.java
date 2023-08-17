@@ -1,12 +1,15 @@
 package com.example.demo.domainModel;
 
 import com.example.demo.viewModel.cuaHangViewModel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +17,7 @@ import java.util.UUID;
 @Table(name = "CuaHang")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class cuaHang {
+public class cuaHang implements Serializable {
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -41,8 +44,8 @@ public class cuaHang {
         this.setThanh_pho( vm.getThanhPho() );
         this.setQuoc_gia( vm.getQuocGia() );
     }
-
-    @OneToMany(mappedBy = "ch")
+    @JsonBackReference
+    @OneToMany(mappedBy = "ch",cascade = {CascadeType.ALL})
     private List<nhanVien> listNv;
 
 

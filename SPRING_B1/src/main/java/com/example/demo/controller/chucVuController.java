@@ -9,12 +9,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@CrossOrigin("*")
 @RequestMapping("chuc-vu")
 public class chucVuController {
 
@@ -25,14 +31,15 @@ public class chucVuController {
     @Qualifier("cv_vm")
     private chucVuVM cvVm;
     @GetMapping("index")
-    public String index(
-            @RequestParam(name = "page", defaultValue = "0")Integer pageNo,
-            Model model
-    ){
-        Pageable pageable = PageRequest.of(pageNo,4);
-        Page<chucVu> pageCV = this.cvRepo.findAll(pageable);
-        model.addAttribute("listCV", pageCV);
-        return "chucVu/index";
+    public ResponseEntity<List<chucVuVM>> getAll(){
+        List<chucVuVM> listch = new ArrayList<>();
+        for (chucVu ch: this.cvRepo.findAll()) {
+            chucVuVM chVM = new chucVuVM();
+            chVM.loadDomain(ch);
+            listch.add(chVM);
+        }
+        System.out.println(listch);
+        return new ResponseEntity<>(listch, HttpStatus.OK);
     }
 
     @GetMapping("create")
