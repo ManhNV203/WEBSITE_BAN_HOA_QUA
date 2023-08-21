@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("*")
@@ -87,12 +85,11 @@ public class nhanVienController {
         return "/nhanVien/create";
     }
 
-    @GetMapping("delete/{id}")
-    public String delete(
-            @PathVariable("id") nhanVien nv
+    @DeleteMapping("/delete/{id}")
+    public void delete(
+            @PathVariable(value = "id") nhanVien nv
     ) {
         this.nvRepo.delete(nv);
-        return "redirect:/nhan-vien/index";
     }
 
     @PostMapping("store")
@@ -120,35 +117,50 @@ public class nhanVienController {
     }
 
     @GetMapping("edit/{id}")
-    public String edit(
+    public ResponseEntity<nhanVienDto> edit(
             Model model,
             @PathVariable("id") nhanVien nv
     ) {
-//        nvVm.loadDomain(nv);
-        model.addAttribute("data", nvVm);
-        model.addAttribute("action", "/nhan-vien/update/" + nv.getId());
-        model.addAttribute("datach", chRepo.findAll());
-        model.addAttribute("datacv", cvRepo.findAll());
-        return "nhanVien/edit";
+        nhanVienDto nvDto = new nhanVienDto();
+        nvDto.setId(nv.getId());
+        nvDto.setMa(nv.getMa());
+        nvDto.setTen(nv.getTen());
+        nvDto.setTen_dem(nv.getTen_dem());
+        nvDto.setHo(nv.getHo());
+        nvDto.setNgay_sinh(nv.getNgay_sinh());
+        nvDto.setGioi_tinh(nv.getGioi_tinh());
+        nvDto.setDia_chi(nv.getDia_chi());
+        nvDto.setSdt(nv.getSdt());
+        nvDto.setTrang_thai(String.valueOf(nv.getTrang_thai()));
+        nvDto.setMat_khau(nv.getMat_khau());
+        nvDto.setCuahangid(String.valueOf(nv.getCh().getId()));
+        nvDto.setChucvuid(String.valueOf(nv.getCv().getId()));
+        return new ResponseEntity<>(nvDto,HttpStatus.OK);
     }
 
-    @PostMapping("update/{id}")
-    public String update(
-            @PathVariable("id") nhanVien nv,
+    @PutMapping("update/{id}")
+    public ResponseEntity<nhanVien> update(
+            @PathVariable("id") nhanVien nvDM,
             Model model,
-            @Valid @ModelAttribute("data") nhanVienDto nvVm,
+            @Valid @RequestBody nhanVienDto nvDto,
             BindingResult result
     ){
-        if (result.hasErrors()){
-            model.addAttribute("data",nv);
-            model.addAttribute("action", "/nhan-vien/update/"+nv.getId());
-            model.addAttribute("datach", chRepo.findAll());
-            model.addAttribute("datacv", cvRepo.findAll());
-            return "nhanVien/edit";
-        }
-
-//        nv.loadView(nvVm);
-        this.nvRepo.save(nv);
-        return "redirect:/nhan-vien/index";
+        nvDM.setMa(nvDto.getMa());
+        nvDM.setTen(nvDto.getTen());
+        nvDM.setTen_dem(nvDto.getTen_dem());
+        nvDM.setHo(nvDto.getHo());
+        nvDM.setNgay_sinh(nvDto.getNgay_sinh());
+        nvDM.setGioi_tinh(nvDto.getGioi_tinh());
+        nvDM.setDia_chi(nvDto.getDia_chi());
+        nvDM.setSdt(nvDto.getSdt());
+        nvDM.setMat_khau(nvDto.getMat_khau());
+        nvDM.setTrang_thai(Integer.valueOf(nvDto.getTrang_thai()));
+        cuaHang ch = null;
+        ch = this.chRepo.findById(UUID.fromString(nvDto.getCuahangid())).orElseThrow();
+        nvDM.setCh(ch);
+        chucVu cv = null;
+        cv = this.cvRepo.findById(UUID.fromString(nvDto.getChucvuid())).orElseThrow();
+        nvDM.setCv(cv);
+        return new ResponseEntity<>(this.nvRepo.save(nvDM),HttpStatus.OK);
     }
 }
