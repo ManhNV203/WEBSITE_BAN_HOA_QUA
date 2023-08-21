@@ -1,0 +1,39 @@
+<div class="container mt-3" style="width: 1250px;">
+    <h3>Hóa Đơn</h3>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Mã Hóa Đơn</th>
+            <th scope="col">Mã Nhân Viên</th>
+            <th scope="col">Tên Khách hàng</th>
+            <th scope="col">Ngày Tạo</th>
+            <th scope="col">Ngày Thanh Toán</th>
+            <th scope="col">Ngày Ship</th>
+            <th scope="col">Ngày Nhận</th>
+            <th scope="col">Trạng Thái</th>
+            <th scope="col">Tên NGười Nhận</th>
+            <th scope="col">Dịa Chỉ</th>
+            <th scope="col">SDT</th>
+            <th scope="col">Hành Động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="width: 50px;" ng-repeat="hd in listhd">
+            <th scope="col">{{$index + 1}}</th>
+            <td scope="col">{{hd.ma}}</td>
+            <td scope="col">{{hd.khachHang}}</td>
+            <td scope="col">{{hd.nhanVien}}</td>
+            <td scope="col">{{hd.ngay_tao}}</td>
+            <td scope="col">{{hd.ngay_thanh_toan}}</td>
+            <td scope="col">{{hd.ngay_ship}}</td>
+            <td scope="col">{{hd.ngay_nhan}}</td>
+            <td scope="col">{{hd.tinh_trang}}</td>
+            <td scope="col">{{hd.ten_nguoi_nhan}}</td>
+            <td scope="col">{{hd.dia_chi}}</td>
+            <td scope="col">{{hd.sdt}}</td>
+            <td><button class="btn btn-primary">Xác Nhận</button></td>
+          </tr>
+        </tbody>
+      </table>
+</div>
